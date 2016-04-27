@@ -2,18 +2,18 @@
  *
  * Copyright 2015 ARM Ltd
  */
-(function(global, factory) {
-    if (typeof exports === 'object') {
-        // CommonJS (Node)
-        module.exports = factory();
-    } else if (typeof define === 'function' && define.amd) {
-        // AMD
-        define(factory);
+(function(root, factory) {
+    if (typeof define === 'function' && define.amd) {
+        // AMD. Register as an anonymous module
+        define(['jquery'], factory);
+    } else if (typeof exports === 'object') {
+        // Node. Does not work with strict CommonJS
+        module.exports = factory(require('jquery'));
     } else {
         // Browser global (with support for web workers)
-        global.mbedCompileApi = factory();
+        root.mbedCompileApi = factory(root.$);
     }
-}(this, function() {
+}(this, function($) {
     'use strict';
 
     // Constants and defaults
