@@ -1,0 +1,71 @@
+<html>
+<head>
+    <title>mbed Compile API Example</title>
+    <link rel="stylesheet" type="text/css" href="example.css">
+    <style>
+        html,
+        body {
+            background-color: #159ab5;
+            font-family: 'Open Sans', sans-serif;
+            text-align: left;
+        }
+        #params,
+        .button {
+            color: #ffffff;
+            position: relative;
+            top: 15vh;
+            padding-left: 10%;
+            max-height: 30vh;
+
+        }
+        #results {
+            position: fixed;
+            max-height:35vh;
+            max-width: 75vw;
+            bottom:0rem;
+            border-style: solid;
+            background-color: #ffffff;
+            color: #00000;
+            overflow: auto;
+        }
+    </style>
+</head>
+<body>
+    <div id="params">
+        <div>
+            <label>Message:</label>
+            <input type="text" name="MESSAGE" size="50vw" value='Hello from the Compile API\r\n'>
+        </div>
+        <div>
+            <label>L.E.D.:</label>
+            <input type="text" name="LED" size="50vw" value='LED2'>
+        </div>
+    </div>
+
+    <div class="button">
+        <button id="build">Build</button>
+    </div>
+
+    <div id="results"></div>
+
+    <script type="text/javascript" src="dist/mbed-compile-api.js"></script>
+    <script>
+        var project = "/teams/mbed_example/code/Compile_API/"; // Change this to match your example program
+        var target = "mbed-LPC1768"; // Change this to match your platform
+
+        var paramsEl = document.getElementById('params');
+        var buildEl = document.getElementById('build');
+        var resultsEl = document.getElementById('results');
+
+        var configurator = new mbedCompileApi(function(message) {
+            resultsEl.innerHTML += "<div>" + message + "</div>";
+        });
+
+        buildEl.on("click", function() {
+            resultsEl.innerHTML = "";
+            configurator.setCredentials('username', 'password');
+            configurator.build(paramsEl, project, target);
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,13 @@
+{
+  "name": "mbed-compile-api-js",
+  "private": true,
+  "version": "0.0.1",
+  "description": "JavaScript library to access the mbed compiler API",
+  "author": "Rob Moran <rob.moran@arm.com>",
+  "private": true,
+  "devDependencies": {
+    "gulp": "^3.8.7",
+    "gulp-jshint": "^1.9.0",
+    "gulp-uglifyjs": "^0.5.0"
+  }
+}
