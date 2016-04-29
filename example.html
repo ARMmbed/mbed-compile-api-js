@@ -6,12 +6,8 @@
 <body>
     <div id="params">
         <div class="row">
-            <label>Message:</label>
-            <input type="text" name="MESSAGE" size="50vw" value='Hello from the Compile API\r\n'>
-        </div>
-        <div class="row">
-            <label>L.E.D.:</label>
-            <input type="text" name="LED" size="50vw" value='LED2'>
+            <label>Name:</label>
+            <input type="text" name="NAME" size="50vw" value='first last' maxlength="20" line-height="100">
         </div>
     </div>
 
@@ -29,8 +25,8 @@
     <script type="text/javascript" src="dist/jquery.min.js"></script>
     <script type="text/javascript" src="dist/mbed-compile-api.min.js"></script>
     <script>
-        var project = "/teams/mbed_example/code/Compile_API/"; // Change this to match your example program
-        var target = "mbed-LPC1768"; // Change this to match your platform
+        var project = "/users/mbedAustin/code/ble-scanner-demo-beacon/"; // Change this to match your example program
+        var target = "Nordic-nRF51822"; // Change this to match your platform
 
         var paramsEl = document.getElementById('params');
         var buildEl = document.getElementById('build');
@@ -44,7 +40,7 @@
 
         buildEl.onclick = function() {
             resultsEl.innerHTML = "";
-            configurator.setCredentials('username', 'password'); // Replace with your mbed credentials
+            configurator.setCredentials('mbed_demo', 'password'); // Replace with your mbed credentials
             configurator.build(paramsEl, project, target);
         };
     </script>

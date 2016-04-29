@@ -8,6 +8,14 @@ body {
   background-color: #159ab5;
 }
 
+#params,#button, input[type="text"], button {
+  font-size: 5vh;
+}
+
+input[type="text"]{
+  max-width: 95vw;
+}
+
 body, label {
   color: #fff;
 }
@@ -21,7 +29,7 @@ button:hover, button:focus, .button:hover, .button:focus {
 }
 
 #results {
-  width: 100%;
+  width: 95%;
   height: 50%;
   position: fixed;
   bottom: 0;
