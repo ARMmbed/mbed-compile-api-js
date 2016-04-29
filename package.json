@@ -1,10 +1,14 @@
 {
   "name": "mbed-compile-api-js",
-  "private": true,
   "version": "0.0.1",
   "description": "JavaScript library to access the mbed compiler API",
-  "author": "Rob Moran <rob.moran@arm.com>",
-  "private": true,
+  "homepage": "https://github.com/ARMmbed/mbed-compile-api-js",
+  "author": "Rob Moran <rob@thegecko.org>",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/ARMmbed/mbed-compile-api-js.git"
+  },
   "devDependencies": {
     "gulp": "^3.8.7",
     "gulp-jshint": "^1.9.0",
