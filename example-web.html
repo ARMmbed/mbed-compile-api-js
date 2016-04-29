@@ -1,51 +1,30 @@
 <html>
 <head>
     <title>mbed Compile API Example</title>
-    <style>
-        html,
-        body {
-            background-color: #159ab5;
-            font-family: 'Open Sans', sans-serif;
-            text-align: left;
-        }
-        #params,
-        .button {
-            color: #ffffff;
-            position: relative;
-            top: 15vh;
-            padding-left: 10%;
-            max-height: 30vh;
-
-        }
-        #results {
-            position: fixed;
-            max-height:35vh;
-            max-width: 75vw;
-            bottom:0rem;
-            border-style: solid;
-            background-color: #ffffff;
-            color: #00000;
-            overflow: auto;
-        }
-    </style>
+    <link rel="stylesheet" type="text/css" href="example.css">
 </head>
 <body>
     <div id="params">
-        <div>
+        <div class="row">
             <label>Message:</label>
             <input type="text" name="MESSAGE" size="50vw" value='Hello from the Compile API\r\n'>
         </div>
-        <div>
+        <div class="row">
             <label>L.E.D.:</label>
             <input type="text" name="LED" size="50vw" value='LED2'>
         </div>
     </div>
 
-    <div class="button">
+    <div id="button" class="row text-center">
         <button id="build">Build</button>
     </div>
 
-    <div id="results"></div>
+    <div id="results">
+        <div id="results-wrapper" class="row">
+            <div id="header">Build Output:</div>
+            <div id="log"></div>
+        </div>
+    </div>
 
     <script type="text/javascript" src="dist/jquery.min.js"></script>
     <script type="text/javascript" src="dist/mbed-compile-api.min.js"></script>
@@ -55,10 +34,12 @@
 
         var paramsEl = document.getElementById('params');
         var buildEl = document.getElementById('build');
-        var resultsEl = document.getElementById('results');
+        var resultsEl = document.getElementById('log');
 
-        var configurator = new mbedCompileApi(function(message) {
+         var configurator = new mbedCompileApi(function(message) {
             resultsEl.innerHTML += "<div>" + message + "</div>";
+            var elem = document.getElementById('results-wrapper');
+            elem.scrollTop = elem.scrollHeight;
         });
 
         buildEl.onclick = function() {

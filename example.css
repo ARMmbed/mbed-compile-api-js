@@ -1,0 +1,39 @@
+
+html, body {
+  height: 100%;
+}
+
+body {
+  font-family: 'Open Sans', sans-serif;
+  background-color: #159ab5;
+}
+
+body, label {
+  color: #fff;
+}
+
+button, .button {
+  background-color: #fba92f;
+}
+
+button:hover, button:focus, .button:hover, .button:focus {
+  background-color: #f9bd31;
+}
+
+#results {
+  width: 100%;
+  height: 50%;
+  position: fixed;
+  bottom: 0;
+  color: #000;
+}
+
+#results-wrapper {
+  background-color: #fff;
+  overflow: auto;
+  height: 100%;
+}
+
+#header {
+  font-weight: bold;
+}
