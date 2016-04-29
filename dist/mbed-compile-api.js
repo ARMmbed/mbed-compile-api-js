@@ -16,18 +16,30 @@
 }(this, function($) {
     'use strict';
 
-    // Constants and defaults
-    var defaultDomain = "https://developer.mbed.org";
-    var api = "/api/v2/tasks/compiler/";
+    var defaultApi = "https://developer.mbed.org/api/v2/tasks/compiler/";
 
     // Constructor
-    var mbedCompileApi = function(logFn, domain) {
+    var mbedCompileApi = function(logFn, api) {
         this.logFn = logFn;
-        this.domain = domain || defaultDomain;
-        this.api = this.domain + api;
+        this.api = api || defaultApi;
     };
 
-    // Set Creds
+    // Read symbols dictionary from inputs
+    mbedCompileApi.prototype.symbolsFromElement = function(element) {
+        var symbols = {};
+        var inputs = element.querySelectorAll("input");
+
+        for (var i = 0; i < inputs.length; i++) {
+            var input = inputs[i];
+            var value = input.value;
+            if (input.type === "text") value = '"' + value +'"';
+            symbols[input.name] = value;
+        }
+
+        return symbols;
+    };
+
+    // Set Credentials
     mbedCompileApi.prototype.setCredentials = function(username, password) {
         var tok = username + ':' + password;
         $.ajaxSetup({
@@ -38,27 +50,18 @@
     };
 
     // Begin a build
-    mbedCompileApi.prototype.build = function(element, repo, target) {
-        var symbols = [];
+    mbedCompileApi.prototype.build = function(symbols, repo, target) {
+        var symbolsArray = [];
 
-        $(element).find("input").each(function() {
-            var input = $(this);
-            var param = input.attr("name");
-            var type = input.attr("type");
-            var value = input.val();
-
-            if (type === "text") {
-                value = '"' + value +'"';
-            }
-
-            symbols.push(param + "=" + value);
+        Object.keys(symbols).forEach(function(symbol) {
+            symbolsArray.push(symbol + "=" + symbols[symbol]);
         });
 
         var payload = {
             platform: target,
-            repo: this.domain + repo,
+            repo: repo,
             clean: false,
-            extra_symbols: symbols.join(",")
+            extra_symbols: symbolsArray.join(",")
         };
 
         this.retryBuild(payload);

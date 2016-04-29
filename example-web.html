@@ -1,0 +1,56 @@
+<html>
+<head>
+    <title>mbed Compile API Example</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+    <div id="params">
+        <div>
+            <label>Message:</label>
+            <input type="text" name="MESSAGE" size="50vw" value='Hello from the Compile API\r\n'>
+        </div>
+        <div>
+            <label>L.E.D.:</label>
+            <input type="text" name="LED" size="50vw" value='LED2'>
+        </div>
+    </div>
+
+    <button id="build">Build</button>
+
+    <div class="output-wrapper">
+        <div id="output" class="output">
+            <div class="header">Build Output:</div>
+            <div id="results"></div>
+        </div>
+    </div>
+
+    <script type="text/javascript" src="dist/jquery.min.js"></script>
+    <script type="text/javascript" src="dist/mbed-compile-api.min.js"></script>
+    <script>
+        var paramsEl = document.getElementById('params');
+        var buildEl = document.getElementById('build');
+        var outputEl = document.getElementById('output');
+        var resultsEl = document.getElementById('results');
+
+        var configurator = new mbedCompileApi(function(message) {
+            resultsEl.innerHTML += "<div>" + message + "</div>";
+            outputEl.scrollTop = outputEl.scrollHeight;
+        });
+        
+        // Replace with your mbed credentials
+        configurator.setCredentials('username', 'password');
+
+        // Change this to match your example program
+        var project = "https://developer.mbed.org/teams/mbed_example/code/Compile_API/";
+
+        // Change this to match your platform
+        var target = "mbed-LPC1768";
+
+        buildEl.onclick = function() {
+            resultsEl.innerHTML = "";
+            var symbols = configurator.symbolsFromElement(paramsEl);
+            configurator.build(symbols, project, target);
+        };
+    </script>
+</body>
+</html>
