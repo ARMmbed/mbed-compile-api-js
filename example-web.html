@@ -1,7 +1,6 @@
 <html>
 <head>
     <title>mbed Compile API Example</title>
-    <link rel="stylesheet" type="text/css" href="example.css">
     <style>
         html,
         body {
@@ -62,11 +61,11 @@
             resultsEl.innerHTML += "<div>" + message + "</div>";
         });
 
-        buildEl.on("click", function() {
+        buildEl.onclick = function() {
             resultsEl.innerHTML = "";
             configurator.setCredentials('username', 'password');
             configurator.build(paramsEl, project, target);
-        });
+        };
     </script>
 </body>
 </html>

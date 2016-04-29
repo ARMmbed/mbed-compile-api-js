@@ -56,7 +56,7 @@
 
         var payload = {
             platform: target,
-            repo: this.domain + "/" + repo,
+            repo: this.domain + repo,
             clean: false,
             extra_symbols: symbols.join(",")
         };
