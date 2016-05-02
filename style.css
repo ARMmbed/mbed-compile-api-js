@@ -7,6 +7,14 @@ body {
   background-color: #159ab5;
 }
 
+#params,#button, input[type="text"], button {
+  font-size: 5vh;
+}
+
+input[type="text"]{
+  max-width: 95vw;
+}
+
 body, label {
   color: #fff;
 }
