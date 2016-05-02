@@ -25,7 +25,7 @@
     </div>
 
     <script type="text/javascript" src="dist/jquery.min.js"></script>
-    <script type="text/javascript" src="dist/mbed-compile-api.min.js"></script>
+    <script type="text/javascript" src="dist/mbed-compile-api.js"></script>
     <script>
         var paramsEl = document.getElementById('params');
         var buildEl = document.getElementById('build');
@@ -36,20 +36,22 @@
             resultsEl.innerHTML += "<div>" + message + "</div>";
             outputEl.scrollTop = outputEl.scrollHeight;
         });
-        
+
         // Replace with your mbed credentials
         configurator.setCredentials('username', 'password');
 
         // Change this to match your example program
-        var project = "https://developer.mbed.org/teams/mbed_example/code/Compile_API/";
+        var repo = "https://developer.mbed.org/teams/mbed_example/code/Compile_API/"; // URL of repo not in workspace
+        var program = "Compile_API"; // name of program in workspace
 
         // Change this to match your platform
-        var target = "mbed-LPC1768";
+        var target = "Nordic-nRF51822";
 
         buildEl.onclick = function() {
             resultsEl.innerHTML = "";
             var symbols = configurator.symbolsFromElement(paramsEl);
-            configurator.build(symbols, project, target);
+            configurator.buildRepo(symbols, repo, target);  // compile repo not in workspace
+            //configurator.buildProgram(symbols, program, target); // compile program in workspace
         };
     </script>
 </body>
