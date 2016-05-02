@@ -49,9 +49,11 @@
         });
     };
 
-    // Begin a build
-    mbedCompileApi.prototype.build = function(symbols, repo, target) {
+    // Build a public repository
+    // repo must be a fully qualified URL to the code location
+    mbedCompileApi.prototype.buildRepo = function(symbols, repo, target) {
         var symbolsArray = [];
+        this.repomode = true;
 
         Object.keys(symbols).forEach(function(symbol) {
             symbolsArray.push(symbol + "=" + symbols[symbol]);
@@ -60,7 +62,26 @@
         var payload = {
             platform: target,
             repo: repo,
-            clean: false,
+            //clean: false,
+            extra_symbols: symbolsArray.join(",")
+        };
+
+        this.retryBuild(payload);
+    };
+
+    // Build a program in users workspace
+    mbedCompileApi.prototype.buildProgram = function(symbols, program, target) {
+        var symbolsArray = [];
+        this.repomode = false;
+
+        Object.keys(symbols).forEach(function(symbol) {
+            symbolsArray.push(symbol + "=" + symbols[symbol]);
+        });
+
+        var payload = {
+            platform: target,
+            program: program,
+            //clean: false,
             extra_symbols: symbolsArray.join(",")
         };
 
@@ -86,6 +107,7 @@
             data: payload,
             success: function(response) {
                 var uuid = response.result.data.task_id;
+                this.uuid = uuid;
                 this.logFn(uuid);
                 setTimeout(function() {
                     this.pollProgress(uuid);
@@ -143,13 +165,36 @@
         });
     };
 
+    // cancel build
+    mbedCompileApi.prototype.cancelBuild = function(){
+        $.ajax({
+            url: this.api + "cancel/",
+            type: "POST",
+            data: {task_id:this.uuid},
+            success: function(response) {
+                this.logFn("...Build cancelled sucessfully");
+            }.bind(this),
+            error: function(response) {
+                if (response.status == 500) {
+                    callback(false);
+                } else {
+                    this.logFn(response.responseText);
+                    callback(true);
+                }
+            }.bind(this)
+        });
+    };
+
     // Download our built file
     mbedCompileApi.prototype.downloadFile = function(data, uuid) {
         var payload = {
-            repomode: true,
             program: data.program,
             binary: data.binary,
             task_id: uuid
+        };
+        // add repomode if compiling a repo
+        if(this.repomode == true){
+            payload[repomode]=this.repomode
         };
 
         $.ajax({
