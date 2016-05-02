@@ -1,0 +1,55 @@
+<html>
+<head>
+    <title>mbed Compile API Example</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+    <div id="params">
+        <div>
+            <label>Name:</label>
+            <input type="text" name="NAME" size="50vw" value='First Last' maxlength="20">
+        </div>
+    </div>
+
+    <button id="build">Build</button>
+
+    <div class="output-wrapper">
+        <div id="output" class="output">
+            <div class="header">Build Output:</div>
+            <div id="results"></div>
+        </div>
+    </div>
+
+    <script type="text/javascript" src="dist/jquery.min.js"></script>
+    <script type="text/javascript" src="dist/mbed-compile-api.js"></script>
+    <script>
+        var paramsEl = document.getElementById('params');
+        var buildEl = document.getElementById('build');
+        var outputEl = document.getElementById('output');
+        var resultsEl = document.getElementById('results');
+
+        var configurator = new mbedCompileApi(function(message) {
+            resultsEl.innerHTML += "<div>" + message + "</div>";
+            outputEl.scrollTop = outputEl.scrollHeight;
+        });
+
+        // Replace with your mbed credentials
+        configurator.setCredentials('mbed_demo', 'password');
+
+        // Change this to match your example program
+        var program = "ble-scanner-demo-beacon"; // name of program in workspace
+        //var repo = "https://developer.mbed.org/teams/mbed_example/code/Compile_API/"; // URL of repo not in workspace
+
+
+        // Change this to match your platform
+        var target = "Nordic-nRF51822";
+
+        buildEl.onclick = function() {
+            resultsEl.innerHTML = "";
+            var symbols = configurator.symbolsFromElement(paramsEl);
+            configurator.buildProgram(symbols, program, target); // compile program in workspace
+            //configurator.buildRepo(symbols, repo, target);  // compile repo not in workspace
+        };
+    </script>
+</body>
+</html>

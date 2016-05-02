@@ -16,18 +16,30 @@
 }(this, function($) {
     'use strict';
 
-    // Constants and defaults
-    var defaultDomain = "https://developer.mbed.org";
-    var api = "/api/v2/tasks/compiler/";
+    var defaultApi = "https://developer.mbed.org/api/v2/tasks/compiler/";
 
     // Constructor
-    var mbedCompileApi = function(logFn, domain) {
+    var mbedCompileApi = function(logFn, api) {
         this.logFn = logFn;
-        this.domain = domain || defaultDomain;
-        this.api = this.domain + api;
+        this.api = api || defaultApi;
     };
 
-    // Set Creds
+    // Read symbols dictionary from inputs
+    mbedCompileApi.prototype.symbolsFromElement = function(element) {
+        var symbols = {};
+        var inputs = element.querySelectorAll("input");
+
+        for (var i = 0; i < inputs.length; i++) {
+            var input = inputs[i];
+            var value = input.value;
+            if (input.type === "text") value = '"' + value +'"';
+            symbols[input.name] = value;
+        }
+
+        return symbols;
+    };
+
+    // Set Credentials
     mbedCompileApi.prototype.setCredentials = function(username, password) {
         var tok = username + ':' + password;
         $.ajaxSetup({
@@ -37,28 +49,40 @@
         });
     };
 
-    // Begin a build
-    mbedCompileApi.prototype.build = function(element, repo, target) {
-        var symbols = [];
+    // Build a public repository
+    // repo must be a fully qualified URL to the code location
+    mbedCompileApi.prototype.buildRepo = function(symbols, repo, target) {
+        var symbolsArray = [];
+        this.repomode = true;
 
-        $(element).find("input").each(function() {
-            var input = $(this);
-            var param = input.attr("name");
-            var type = input.attr("type");
-            var value = input.val();
-
-            if (type === "text") {
-                value = '"' + value +'"';
-            }
-
-            symbols.push(param + "=" + value);
+        Object.keys(symbols).forEach(function(symbol) {
+            symbolsArray.push(symbol + "=" + symbols[symbol]);
         });
 
         var payload = {
             platform: target,
-            repo: this.domain + repo,
-            clean: false,
-            extra_symbols: symbols.join(",")
+            repo: repo,
+            //clean: false,
+            extra_symbols: symbolsArray.join(",")
+        };
+
+        this.retryBuild(payload);
+    };
+
+    // Build a program in users workspace
+    mbedCompileApi.prototype.buildProgram = function(symbols, program, target) {
+        var symbolsArray = [];
+        this.repomode = false;
+
+        Object.keys(symbols).forEach(function(symbol) {
+            symbolsArray.push(symbol + "=" + symbols[symbol]);
+        });
+
+        var payload = {
+            platform: target,
+            program: program,
+            //clean: false,
+            extra_symbols: symbolsArray.join(",")
         };
 
         this.retryBuild(payload);
@@ -83,6 +107,7 @@
             data: payload,
             success: function(response) {
                 var uuid = response.result.data.task_id;
+                this.uuid = uuid;
                 this.logFn(uuid);
                 setTimeout(function() {
                     this.pollProgress(uuid);
@@ -140,13 +165,36 @@
         });
     };
 
+    // cancel build
+    mbedCompileApi.prototype.cancelBuild = function(){
+        $.ajax({
+            url: this.api + "cancel/",
+            type: "POST",
+            data: {task_id:this.uuid},
+            success: function(response) {
+                this.logFn("...Build cancelled sucessfully");
+            }.bind(this),
+            error: function(response) {
+                if (response.status == 500) {
+                    callback(false);
+                } else {
+                    this.logFn(response.responseText);
+                    callback(true);
+                }
+            }.bind(this)
+        });
+    };
+
     // Download our built file
     mbedCompileApi.prototype.downloadFile = function(data, uuid) {
         var payload = {
-            repomode: true,
             program: data.program,
             binary: data.binary,
             task_id: uuid
+        };
+        // add repomode if compiling a repo
+        if(this.repomode == true){
+            payload[repomode]=this.repomode
         };
 
         $.ajax({
