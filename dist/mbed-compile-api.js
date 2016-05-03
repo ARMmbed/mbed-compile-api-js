@@ -81,6 +81,8 @@
         var payload = {
             platform: target,
             program: program,
+            // board:39,
+            //mode:"OTA",
             //clean: false,
             extra_symbols: symbolsArray.join(",")
         };
