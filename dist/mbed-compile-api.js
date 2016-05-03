@@ -51,28 +51,20 @@
 
     // Build a public repository
     // repo must be a fully qualified URL to the code location
-    mbedCompileApi.prototype.buildRepo = function(symbols, repo, target) {
-        var symbolsArray = [];
+    mbedCompileApi.prototype.buildRepo = function(symbols1, repo1, target1) {
         this.repomode = true;
-
-        Object.keys(symbols).forEach(function(symbol) {
-            symbolsArray.push(symbol + "=" + symbols[symbol]);
-        });
-
-        var payload = {
-            platform: target,
-            repo: repo,
-            //clean: false,
-            extra_symbols: symbolsArray.join(",")
-        };
-
-        this.retryBuild(payload);
+        this.build(symbols1, repo1, target1)
     };
 
     // Build a program in users workspace
-    mbedCompileApi.prototype.buildProgram = function(symbols, program, target) {
-        var symbolsArray = [];
+    mbedCompileApi.prototype.buildProgram = function(symbols2, program2, target2) {
         this.repomode = false;
+        this.build(symbols2, program2, target2)
+    };
+
+    // Build a program in users workspace
+    mbedCompileApi.prototype.build = function(symbols, code, target) {
+        var symbolsArray = [];
 
         Object.keys(symbols).forEach(function(symbol) {
             symbolsArray.push(symbol + "=" + symbols[symbol]);
@@ -80,10 +72,16 @@
 
         var payload = {
             platform: target,
-            program: program,
+            //target:target,
             //clean: false,
             extra_symbols: symbolsArray.join(",")
         };
+        // set repo or program mode accordingly
+        if(this.repomode === true){
+            payload['repo'] = code;
+        }else{
+            payload['program']=code;
+        }
 
         this.retryBuild(payload);
     };
@@ -115,7 +113,7 @@
                 callback(true);
             }.bind(this),
             error: function(response) {
-                if (response.status == 500) {
+                if (response.status === 500) {
                     callback(false);
                 } else {
                     this.logFn(response.responseText);
@@ -175,7 +173,7 @@
                 this.logFn("...Build cancelled sucessfully");
             }.bind(this),
             error: function(response) {
-                if (response.status == 500) {
+                if (response.status === 500) {
                     callback(false);
                 } else {
                     this.logFn(response.responseText);
@@ -193,8 +191,8 @@
             task_id: uuid
         };
         // add repomode if compiling a repo
-        if(this.repomode == true){
-            payload[repomode]=this.repomode
+        if(this.repomode === true){
+            payload['repomode']=this.repomode;
         };
 
         $.ajax({
