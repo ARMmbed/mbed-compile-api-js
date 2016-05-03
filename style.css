@@ -7,11 +7,11 @@ body {
   background-color: #159ab5;
 }
 
-#params,#button, input[type="text"], button {
+#params,#button, input[type="text"], input[type="email"],button {
   font-size: 5vh;
 }
 
-input[type="text"]{
+input[type="text"],input[type="email"]{
   max-width: 95vw;
 }
 
@@ -28,10 +28,10 @@ button:hover, button:focus {
 }
 
 .output-wrapper {
-  width: 100%;
-  height: 50%;
+  width: 95vw;
+  height: 50vh;
   position: fixed;
-  bottom: 0;
+  bottom: 1%;
   color: #000;
 }
 
