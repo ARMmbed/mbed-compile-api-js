@@ -51,13 +51,13 @@
 
     // Build a public repository
     // repo must be a fully qualified URL to the code location
-    mbedCompileApi.prototype.buildRepo = function(symbols1, repo1, target1) {
+    mbedCompileApi.prototype.buildRepo = function(symbols, repo, target) {
         this.repomode = true;
         this.build(symbols1, repo1, target1)
     };
 
     // Build a program in users workspace
-    mbedCompileApi.prototype.buildProgram = function(symbols2, program2, target2) {
+    mbedCompileApi.prototype.buildProgram = function(symbols, program, target) {
         this.repomode = false;
         this.build(symbols2, program2, target2)
     };
@@ -80,7 +80,7 @@
         if(this.repomode === true){
             payload['repo'] = code;
         }else{
-            payload['program']=code;
+            payload['program'] = code;
         }
 
         this.retryBuild(payload);
@@ -192,7 +192,7 @@
         };
         // add repomode if compiling a repo
         if(this.repomode === true){
-            payload['repomode']=this.repomode;
+            payload['repomode'] = this.repomode;
         };
 
         $.ajax({
