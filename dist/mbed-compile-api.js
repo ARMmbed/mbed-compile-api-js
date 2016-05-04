@@ -53,13 +53,13 @@
     // repo must be a fully qualified URL to the code location
     mbedCompileApi.prototype.buildRepo = function(symbols, repo, target) {
         this.repomode = true;
-        this.build(symbols1, repo1, target1)
+        this.build(symbols, repo, target)
     };
 
     // Build a program in users workspace
     mbedCompileApi.prototype.buildProgram = function(symbols, program, target) {
         this.repomode = false;
-        this.build(symbols2, program2, target2)
+        this.build(symbols, program, target)
     };
 
     // Build a program in users workspace
