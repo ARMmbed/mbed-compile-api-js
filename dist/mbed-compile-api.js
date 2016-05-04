@@ -49,8 +49,21 @@
         });
     };
 
-    // Begin a build
-    mbedCompileApi.prototype.build = function(symbols, repo, target) {
+    // Build a public repository
+    // repo must be a fully qualified URL to the code location
+    mbedCompileApi.prototype.buildRepo = function(symbols, repo, target) {
+        this.repomode = true;
+        this.build(symbols, repo, target)
+    };
+
+    // Build a program in users workspace
+    mbedCompileApi.prototype.buildProgram = function(symbols, program, target) {
+        this.repomode = false;
+        this.build(symbols, program, target)
+    };
+
+    // Build a program in users workspace
+    mbedCompileApi.prototype.build = function(symbols, code, target) {
         var symbolsArray = [];
 
         Object.keys(symbols).forEach(function(symbol) {
@@ -59,10 +72,16 @@
 
         var payload = {
             platform: target,
-            repo: repo,
-            clean: false,
+            //target:target,
+            //clean: false,
             extra_symbols: symbolsArray.join(",")
         };
+        // set repo or program mode accordingly
+        if(this.repomode === true){
+            payload['repo'] = code;
+        }else{
+            payload['program'] = code;
+        }
 
         this.retryBuild(payload);
     };
@@ -86,6 +105,7 @@
             data: payload,
             success: function(response) {
                 var uuid = response.result.data.task_id;
+                this.uuid = uuid;
                 this.logFn(uuid);
                 setTimeout(function() {
                     this.pollProgress(uuid);
@@ -93,7 +113,7 @@
                 callback(true);
             }.bind(this),
             error: function(response) {
-                if (response.status == 500) {
+                if (response.status === 500) {
                     callback(false);
                 } else {
                     this.logFn(response.responseText);
@@ -143,13 +163,36 @@
         });
     };
 
+    // cancel build
+    mbedCompileApi.prototype.cancelBuild = function(){
+        $.ajax({
+            url: this.api + "cancel/",
+            type: "POST",
+            data: {task_id:this.uuid},
+            success: function(response) {
+                this.logFn("...Build cancelled sucessfully");
+            }.bind(this),
+            error: function(response) {
+                if (response.status === 500) {
+                    callback(false);
+                } else {
+                    this.logFn(response.responseText);
+                    callback(true);
+                }
+            }.bind(this)
+        });
+    };
+
     // Download our built file
     mbedCompileApi.prototype.downloadFile = function(data, uuid) {
         var payload = {
-            repomode: true,
             program: data.program,
             binary: data.binary,
             task_id: uuid
+        };
+        // add repomode if compiling a repo
+        if(this.repomode === true){
+            payload['repomode'] = this.repomode;
         };
 
         $.ajax({
