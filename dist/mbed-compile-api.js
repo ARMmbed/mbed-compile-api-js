@@ -73,7 +73,7 @@
         var payload = {
             platform: target,
             //target:target,
-            //clean: false,
+            clean: true,
             extra_symbols: symbolsArray.join(",")
         };
         // set repo or program mode accordingly
