@@ -60,7 +60,7 @@
         });
 
         var payload = {
-            platform: target,
+            target: target,
             repo: repo,
             //clean: false,
             extra_symbols: symbolsArray.join(",")
@@ -79,7 +79,7 @@
         });
 
         var payload = {
-            platform: target,
+            target: target,
             program: program,
             // board:39,
             //mode:"OTA",
