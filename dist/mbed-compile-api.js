@@ -83,7 +83,7 @@
             program: program,
             // board:39,
             //mode:"OTA",
-            //clean: false,
+            clean: true,
             extra_symbols: symbolsArray.join(",")
         };
 
