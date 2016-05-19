@@ -3,6 +3,9 @@
 ## What is this?
 This code is a modification of the master branch made to work to compile ble beacons. The example-web.html page is meant to run on a table. The webpage takes in the persons name and then compiles the code remotely, the code is then downloaded to the tablet and flashed to the target device over FOTA using the BLE DFU service. 
 
+## What it looks like
+![Screenshot](screenshot.PNG)
+
 ## How to use
 1. replace the `username` and `password` fields with valid mbed credentials. 
 2. import the [ble-scanner-beacon-demo](https://developer.mbed.org/users/mbedAustin/code/ble-scanner-demo-beacon/) code to your mbed account
