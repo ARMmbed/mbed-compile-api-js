@@ -1,43 +1,20 @@
-# mbed-compile-api-js
-JavaScript library to access the mbed compiler API
+# mbed-compile-api-js dac-demo branch
 
-## Requirements
-- a [developer.mbed.org](http://developer.mbed.org/login) acount
-- the URL for a mbed program you wish to compile
-
-## What does it do?
-The mbed configurator allows you to build existing mbed projects. You can either build an existing mbed project or tweak it by passing in configuration parameters that will override existing `#define`'s.
+## What is this?
+This code is a modification of the master branch made to work to compile ble beacons. The example-web.html page is meant to run on a table. The webpage takes in the persons name and then compiles the code remotely, the code is then downloaded to the tablet and flashed to the target device over FOTA using the BLE DFU service. 
 
 ## How to use
-- Create a webpage that included the `mbed.configurator.js` file.
-- Initialize a configurator object
-```javascript
-    var configurator = new mbedConfigurator(callbackFn);
-```
-- Set your credentials using the `configurator.setCredentials('username','password')` function. Fill in your mbed account credentials.
-- Trigger a build `configurator.build('params','projectURL','boardName')`
-    * `params` - this is a dictionary where the Keys match existing `#define` in the code. The value of the `#define` will be replaced with the value of the parameter.
-    * `projectURL` - the fully qualified url to where the code lives.
-    * `boardName` - the unique identifier for the target platform. This can be pulled form the URL for the [platforms](http://developer.mbed.org/platforms).
+1. replace the `username` and `password` fields with valid mbed credentials. 
+2. import the [ble-scanner-beacon-demo](https://developer.mbed.org/users/mbedAustin/code/ble-scanner-demo-beacon/) code to your mbed account
+3. run the example webpage.
 
-#### Example 1
-compile public code at `developer.mbed.org/users/mbed_demo/code/remote-compile-demo`. The code has a `#define` that looks like the following.
+Alternatively you can use the `buildRepo` functionality instead, which will not require you to import the code to your workspace. This will however take longer to compile (2-3 min) as compared to the workspace based `buildProgram` method (10-30sec).
 
-```cpp
-#define KEY "value"
-```
+4. Change the target, in this example we assume you are using a nordic nRF51822 board and are building a OTA binary for it. Other BLE boards are also supported. 
 
-We want to compile this code for the platform on this page [https://developer.mbed.org/platforms/mbed-LPC1768/](https://developer.mbed.org/platforms/mbed-LPC1768/).
+## Other 
+This code is meant to be run on a tablet with BLE. This webpage is one part of a 2 part demo, the other part of the demo runs on a Raspberry Pi 3 and displays who is near the booth. The code for the other half of the demo can be found [here](https://github.com/BlackstoneEngineering/ble-scanner-station-demo)
 
-The three variables are as follows
 
-- `boardName` is `mbed-LPC1768`, as taken from the URL for the platform
-- `projectURL` is `developer.mbed.org/users/mbed_demo/code/remote-compile-demo`
-- `params` is {'KEY':'an arbitrary value'}. Now the `#define KEY` in the code will have the value `'an arbitrary value'`
-
-## More Info
-- [https://developer.mbed.org/handbook/Compile-API](https://developer.mbed.org/handbook/Compile-API) - info on compile API
-- [https://developer.mbed.org/teams/mbed/code/mbed-API-helper](https://developer.mbed.org/teams/mbed/code/mbed-API-helper) - python script to build repositories
-
-## Liscense
-Apache-2.0
+## Liscense 
+Apache 2.0, as always
