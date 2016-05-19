@@ -20,6 +20,9 @@ The mbed configurator allows you to build existing mbed projects. You can either
     * `program/repo` - For `buildProgram` this is the name of the project in your workspace. For `buildRepo` this is the absolute URL of the repo.
     * `boardName` - the unique identifier for the target platform. This can be pulled form the URL for the [platforms](http://developer.mbed.org/platforms).
 
+## What does it look like?
+![example-web.html](screenshot.PNG)
+
 #### Example 1
 compile public code at [`developer.mbed.org/teams/mbed_example/code/Compile_API/`](https://developer.mbed.org/teams/mbed_example/code/Compile_API/). The code has a `#define` that looks like the following.
 
